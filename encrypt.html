@@ -137,6 +137,24 @@
         document.getElementById("textDecrypted2").value = decryptedText;
     };
 
+    document.write("<table>");
+    for (var a=97; a <= 122; a++) {
+        document.write("<tr>");
+        b = a;
+        for(b; b < a+26; b++) {
+            let c;
+            if (b > 122) {
+                c = b - 26;
+            }
+            else {
+                c = b;
+            }
+            document.write("<td>"+ String.fromCharCode(c) +"</td>");
+        }
+        document.write("</tr>");
+    }
+    document.write("</table>");
+
 
 
 
