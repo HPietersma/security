@@ -8,6 +8,7 @@
 </head>
 <body>
     <div>
+        <h3>Caesar cipher</h3>
         <input type="text" placeholder="text die geëncrypt moet worden" id="text">
         <input type="number" placeholder="rotatie hoeveelheid" id="rotation">
         <button onclick="encrypt()">encrypt</button>
@@ -17,9 +18,10 @@
     </div>
 
     <div>
+        <h3>Vigenere cipher</h3>
         <input type="text" placeholder="text die geëncrypt moet worden" id="text2">
+        <input type="text" placeholder="sleutel" id="key">
         <button onclick="encrypt2()">encrypt</button>
-        <input type="text" placeholder="encryptie sleutel" readonly id="encryptionKey">
         <input type="text" placeholder="geëncrypte text" readonly id="textEncrypted2">
         <button onclick="decrypt2()">decrypt</button>
         <input type="text" placeholder="gedecrypte text" readonly id="textDecrypted2">
@@ -30,7 +32,8 @@
 
 <script>
 
-    //opdracht 1
+//opdracht 1
+
     let rotation = 0;
 
     function encrypt() {
@@ -92,86 +95,47 @@
         document.getElementById("textDecrypted").value = decryptedString;
     }
 
-    //opdracht2
+//opdracht2
 
-    let decryptionKey = new Object();
-
-    function encrypt2() {
+    function encrypt2(){
 
         let text = document.getElementById("text2").value;
+        let key = document.getElementById("key").value;
 
-        text = text.toLowerCase();
-        text = text.replace(/[^\w\s]/g,'');
-        text = text.replace(/[0-9]/g, '')
-        text = text.replace(/\s/g, '');
-        let textArray = Array.from(text);
-       
-        letterArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-        let encryptionKey = new Object();
-        
-        letterArray.forEach(element => {
-            encryptionKey[element] = Math.floor(Math.random() * 10);
-        });
+        var encryptedText = "";
+        for(var i = 0, j = 0; i < text.length; i++){
+            var currentLetter = text[i];
 
-        let textEncrypted = [];
-        
-        textArray.forEach(letter => {
-            charCode = letter.charCodeAt() + encryptionKey[letter];
+            var lowerLetter = ((currentLetter.charCodeAt() - 97) + (key[j%key.length].toLowerCase().charCodeAt() - 97)) % 26;
+            encryptedText += String.fromCharCode(lowerLetter+97);
+            j++;
+        }
+        document.getElementById("textEncrypted2").value = encryptedText;
+    };
 
-            if (charCode > 122) {
-                charCode -= 26;
-            }
-            if (charCode < 97) {
-                charCode += 26;
-            }
-            textEncrypted.push(charCode);
-        });
+    
+    function decrypt2(){
 
-        let encryptedString = "";
-
-        textEncrypted.forEach(number => {
-            encryptedString = encryptedString + String.fromCharCode(number);
-        });
-
-        let encryptionKeyToString = JSON.stringify(encryptionKey).replace(/[{(":")}]/g, '');
-
-        document.getElementById("textEncrypted2").value = encryptedString;
-        document.getElementById("encryptionKey").value = (encryptionKeyToString);
-
-    }
-
-    function decrypt2() {
         let text = document.getElementById("textEncrypted2").value;
-       
-        let textArray = Array.from(text);
-        let textDecrypted = [];
+        let key = document.getElementById("key").value;
 
-        textArray.forEach(letter => {
-            charCode = letter.charCodeAt() - encryptionKey[letter];
+        var decryptedText = "";
+        for(var i = 0, j = 0; i < text.length; i++){
+            var currentLetter = text[i];
 
-            if (charCode > 122) {
-                charCode -= 26;
+            var lowerLetter = ((currentLetter.charCodeAt() - 97) - (key[j%key.length].toLowerCase().charCodeAt() - 97)) % 26;
+
+            lowerLetter = lowerLetter + 97;
+
+            if (lowerLetter < 97) {
+                lowerLetter += 26;
             }
-            if (charCode < 97) {
-                charCode += 26;
-            }
-            textDecrypted.push(charCode);
-        });
 
-        let decryptedString= "";
-
-        textDecrypted.forEach(number => {
-            decryptedString = decryptedString + String.fromCharCode(number);
-        });
-
-        document.getElementById("textDecrypted2").value = decryptedString;
-
-
-
-    }
-
-
-
+            decryptedText += String.fromCharCode(lowerLetter);
+            j++;
+        }
+        document.getElementById("textDecrypted2").value = decryptedText;
+    };
 
 
 
@@ -192,6 +156,11 @@
         width: 100%;
         padding: 5px;
         margin: 1px;
+    }
+
+    h3 {
+        text-align: center;
+        width: 100%;
     }
 
 </style>
