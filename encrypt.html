@@ -31,6 +31,16 @@
     <h3>Tabel</h3>
     </div>
 
+    <div>
+        <h3>Transpositional cipher</h3>
+        <input type="text" placeholder="text die geëncrypt moet worden" id="text3">
+        <input type="text" placeholder="sleutel" id="key3">
+        <button onclick="encrypt3()">encrypt</button>
+        <input type="text" placeholder="geëncrypte text" readonly id="textEncrypted3">
+        <button onclick="decrypt3()">decrypt</button>
+        <input type="text" placeholder="gedecrypte text" readonly id="textDecrypted3">
+    </div>
+
 </body>
 </html>
 
@@ -179,8 +189,98 @@
     document.getElementById("tabel").innerHTML += table;
 
 
+// opdracht 3
+
+    function encrypt3() {
+
+        let text = document.getElementById("text3").value;
+        let key = parseInt(document.getElementById("key3").value);
+
+        text = text.toLowerCase();
+        text = text.replace(/[^\w\s]/g,'');
+        text = text.replace(/[0-9]/g, '')
+        text = text.replace(/\s/g, '');
+        let textArray = Array.from(text);
+        let railsArray = [];
+        let textEncrypted = "";
+
+        for (let i = 0; i < key; i++) {
+            railsArray.push([]);  
+        }
+
+        let rail = 0;
+
+        textArray.forEach(element => {
+            railsArray[rail].push(element);
+            rail++
+            if(rail >= key) {
+                rail = 0;
+            }
+        });
+        
+        for (let i = 0; i < key; i++) {
+            railsArray[i].forEach(element => {
+                textEncrypted += element;
+            });
+        }
+        
+        document.getElementById("textEncrypted3").value = textEncrypted;
+
+    }
+
+    function decrypt3 () {
+
+        let text = document.getElementById("textEncrypted3").value;
+        let key = parseInt(document.getElementById("key3").value);
+
+        let textArray = Array.from(text);
+        let modAmount = textArray.length % 3
+        let arrayAmount = (textArray.length - (textArray.length % 3)) / key;
+        let railsArray = [];
+        let decryptedArray = [];
+        let decryptedText = "";
+
+        for (let i = 0; i < key; i++) {
+            railsArray.push([]);  
+        }
+
+        let modCheck = 0;
+        let railLenght = Math.ceil(textArray.length / key);
+        let arrayPosition = 0;
+        for (let i = 0; i < key; i++) {
+            if (modCheck < modAmount) {
+                for (let j = 0; j < railLenght; j++) {
+                    railsArray[i].push(textArray[arrayPosition])
+                    arrayPosition++;
+                }
+            }
+            if (modCheck >= modAmount) {
+                for (let j = 0; j < (railLenght - 1); j++) {
+                    railsArray[i].push(textArray[arrayPosition])
+                    arrayPosition++;
+                }
+            }
+            modCheck++;
+        }
+
+        let selectedRail = 0;
+        textArray.forEach(element => {
+            decryptedArray.push(railsArray[selectedRail].shift())
+            selectedRail++;
+            if (selectedRail >= key) {
+                selectedRail = 0;
+            }
+        });
+
+        decryptedArray.forEach(element => {
+            decryptedText += element;
+        });
+
+        document.getElementById("textDecrypted3").value = decryptedText;
 
 
+
+    }
 
 
 
